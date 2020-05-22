@@ -43,6 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Memory.cs" />
+    <Compile Include="Page.cs" />
+    <Compile Include="OperatingSystem.cs" />
+    <Compile Include="MemoryManagement.cs" />
+    <Compile Include="Process.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
