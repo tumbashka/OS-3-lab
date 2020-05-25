@@ -8,11 +8,11 @@ namespace OS_3_lab
     public class MemoryManagement
     {
         private Process process;
-        private LinkedList<Page>  clock;
-        public MemoryManagement()
+        private List<Page> clock;
+        public MemoryManagement() 
         {
             process = new Process(5, 15);
-            this.clock = new LinkedList<Page>();
+            this.clock = new List<Page>();
         }
         public int addPage(Process process)
         {
@@ -20,7 +20,7 @@ namespace OS_3_lab
             process.getPagesIds().Add(pageId);
             return pageId;
         }
-        public Page getPage(int pageId)
+        public Page getPage(int pageId,Memory memory, List<Page> pages)
         {
             Page page = this.process.getPage(pageId);
             if (page.isPresent())
@@ -29,41 +29,40 @@ namespace OS_3_lab
             }
             else
             {
-                int emptyPageId = OperatingSystem.memory.getEmptyPageId();
+                int emptyPageId = memory.getEmptyPageId();
                 if (emptyPageId != -1)
                 {
-                    OperatingSystem.memory.setPage(emptyPageId, page);
+                    memory.setPage(emptyPageId, page);
                     page.setRecourse(true);
                     page.setPresence(true);
                     page.setPhysicalAddress(emptyPageId);
-                    this.clock.AddLast(page);
+                    this.clock.Add(page);
                 }
                 else
                 {
                     while (true)
                     {
-                        Page replacePage = this.clock.First.Value;
-                        clock.RemoveLast();
+                        Page replacePage = this.clock[0];
+                        clock.RemoveAt(clock.Count - 1);
                         if (replacePage.isRecourse())
                         {
                             replacePage.setRecourse(false);
-                            this.clock.AddLast(replacePage);
+                            this.clock.Add(replacePage);
                         }
                         else
                         {
                             if (replacePage.getVirtualAddress() != -1)
                             {
-                                OperatingSystem.memory.setPage(replacePage.getPhysicalAddress(),
-                                      OperatingSystem.returnPage(replacePage.getVirtualAddress()));
+                                memory.setPage(replacePage.getPhysicalAddress(), pages[replacePage.getVirtualAddress()]);                                   
                             }
                             else
                             {
-                                OperatingSystem.memory.setPage(replacePage.getPhysicalAddress(), page);
+                                memory.setPage(replacePage.getPhysicalAddress(), page);
                             }
                             page.setRecourse(true);
                             page.setPresence(true);
                             page.setPhysicalAddress(replacePage.getPhysicalAddress());
-                            this.clock.AddLast(page);
+                            this.clock.Add(page);
                             replacePage.setPresence(false);
                             replacePage.setVirtualAddress(process.addPage(replacePage));
                             replacePage.setPhysicalAddress(-1);

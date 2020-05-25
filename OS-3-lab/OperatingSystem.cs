@@ -7,22 +7,22 @@ namespace OS_3_lab
     public class OperatingSystem
     {
         static Random rand = new Random((int)DateTime.Now.Ticks);
-        public static Memory memory;
+        private Memory memory;
         private MemoryManagement MM;
         private List<Process> processes;
-        private static List<Page> pages;
+        private List<Page> pages;
         public OperatingSystem(int memorySize, int pageSize)
         {
             memory = new Memory(memorySize, pageSize);
-            this.MM = new MemoryManagement();
-            this.processes = new List<Process>();
+            MM = new MemoryManagement();
+            processes = new List<Process>();
             pages = new List<Page>();
         }
         public void addProcess()
         {
-            Process process = new Process(this.processes.Count, rand.Next(1,5));
+            Process process = new Process(this.processes.Count, rand.Next(1, 5));
             this.processes.Add(process);
-            Console.WriteLine("Creating a new process "+ process.getId()+" requiring " + process.getCountPages() + " pages");
+            Console.WriteLine("Creating a new process " + process.getId() + " requiring " + process.getCountPages() + " pages");
         }
         public Process getProcess(int processId)
         {
@@ -52,12 +52,13 @@ namespace OS_3_lab
             {
                 if (process.getPagesIds().Contains(pageId))
                 {
-                    this.MM.getPage(pageId);
+                   // returnPage(replacePage.getVirtualAddress());
+                    this.MM.getPage(pageId, memory, pages);
                     Console.WriteLine("Process " + process.getId() + " requested page " + pageId);
                 }
                 else
                 {
-                    Console.WriteLine("On process " + process.getId() + " not have proccess " + pageId);
+                    Console.WriteLine("У процесса " + process.getId() + " нет страницы " + pageId);
                 }
             }
         }
@@ -70,18 +71,14 @@ namespace OS_3_lab
                 Page page = memory.getPage(pageId);
                 if (page == null)
                 {
-                    Console.WriteLine(" |    "+pageId);
+                    Console.WriteLine(" |    " + pageId);
                 }
                 else
                 {
                     Process process = this.getProcess(page.getProcessId());
-                    Console.WriteLine(" |    "+pageId + " |    " + process.getId() + " |    " + page.isRecourse().ToString());
+                    Console.WriteLine(" |    " + pageId + " |    " + process.getId() + " |    " + page.isRecourse().ToString());
                 }
             }
-        }
-        public static Page returnPage(int pageId)
-        {
-            return pages[pageId];
         }
     }
 }
