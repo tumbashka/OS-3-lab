@@ -52,7 +52,6 @@ namespace OS_3_lab
             {
                 if (process.getPagesIds().Contains(pageId))
                 {
-                   // returnPage(replacePage.getVirtualAddress());
                     this.MM.getPage(pageId, memory, pages);
                     Console.WriteLine("Process " + process.getId() + " requested page " + pageId);
                 }
